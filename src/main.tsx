@@ -8,11 +8,13 @@ import { Redirect } from './components/Redirect';
 import { NotFound } from './components/NotFound';
 import { Post } from './components/Post';
 import GlobalStyles from './styles/GlobalStyles';
+import { ToastContainer } from 'react-toastify';
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
     <BrowserRouter>
     <GlobalStyles />
+    < ToastContainer autoClose={3000}/>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />

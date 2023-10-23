@@ -1,5 +1,6 @@
 import styled, { createGlobalStyle } from "styled-components";
 import * as colors from '../config/colors';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default createGlobalStyle`
     * {
@@ -29,6 +30,10 @@ export default createGlobalStyle`
 
     ul {
         list-style: none;
+    }
+
+    body .Toastify .Toastify__toast-container .Toastfy__toast--success {
+        background: ${colors.successColor};
     }
 
 `;
