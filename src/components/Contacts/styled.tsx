@@ -6,3 +6,5 @@ export const Title = styled.h1`
     font-weight: 700;
     color: ${primaryDarkColor};
 `;
+
+export const ContactContainer = styled.div``;

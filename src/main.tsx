@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { Home } from './components/Home';
+import { Contacts } from './components/Contacts';
 import { About } from './components/About';
 import { Posts } from './components/Posts';
 import { Redirect } from './components/Redirect';
@@ -16,7 +16,7 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
     <GlobalStyles />
     < ToastContainer autoClose={3000}/>
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route path="/" element={<Contacts />} />
         <Route path="/about" element={<About />} />
         <Route path="/posts" element={<Posts />}>
           <Route path=":id" element={<Post />} />
