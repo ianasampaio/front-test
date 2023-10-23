@@ -1,5 +1,4 @@
 import { Outlet, useParams, useSearchParams } from 'react-router-dom';
-import './style.css';
 
 export const Posts = () => {
   const params = useParams();

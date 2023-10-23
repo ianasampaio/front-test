@@ -1,9 +1,14 @@
-import './style.css';
+import { Container } from '../../styles/GlobalStyles';
+import { Title } from './styled';
 
 export const Home = () => {
   return (
-    <div>
-      <h1>Home</h1>
-    </div>
+    <>
+    <Container>
+      <div>
+        <Title>Home</Title>
+      </div>
+    </Container>
+    </>
   );
 };
