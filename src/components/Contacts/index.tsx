@@ -27,8 +27,8 @@ export const Contacts = () => {
     async function getContacts() {
       const response = await axios.get('/contacts');
       const data = response.data as Contact[];
-      console.log(data);
-      setContacts(data);
+      const sortedContacts = data.sort((a, b) => a.name.localeCompare(b.name));
+      setContacts(sortedContacts);
     }
 
     getContacts();

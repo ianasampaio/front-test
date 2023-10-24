@@ -1,9 +1,12 @@
 import { useState } from 'react';
 import Modal from 'react-modal';
 import { FaPlus } from 'react-icons/fa'
-import { Button, FormContainer, FormField, SubmitButton } from './styled';
+import { Button, ButtonDiv, CancelButton, FormContainer, FormField, NewTitle, SubmitButton } from './styled';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import InputMask from 'react-input-mask';
+import styled from 'styled-components';
+import { secondaryColor } from '../../config/colors';
 
 const customStyles = {
   content: {
@@ -19,12 +22,37 @@ const customStyles = {
   },
 };
 
+const customInput = (
+  <input
+    type="text"
+    className="custom-datepicker-input"
+    style={{
+      display: 'block',
+      marginBottom: '20px',
+      width: '100%',
+      padding: '10px',
+      fontSize: '16px',
+      border: '1px solid #e6e6e8',
+      borderRadius: '10px',
+      cursor: 'pointer',
+    }}
+  />
+);
+const PhoneInput = styled(InputMask)`
+  display: block;
+  margin-bottom: 20px;
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid ${secondaryColor};
+  border-radius:10px;
+`;
+
 Modal.setAppElement('#root');
 
 export const ContactAdd = () => {
     const [modalIsOpen, setIsOpen] = useState(false);
     const [formData, setFormData] = useState({
-      id: '',
       name: '',
       email: '',
       phone: '',
@@ -58,6 +86,11 @@ export const ContactAdd = () => {
       setSelectedDate(date); // Atualiza a data no date picker
     };
 
+    const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      const value = e.target.value;
+      setFormData({ ...formData, phone: value });
+    };
+
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
       // Faça algo com os dados do formulário, por exemplo, envie para um servidor
@@ -65,7 +98,6 @@ export const ContactAdd = () => {
 
     const clearForm = () => {
       setFormData({
-        id: '',
         name: '',
         email: '',
         phone: '',
@@ -86,16 +118,10 @@ export const ContactAdd = () => {
       style={customStyles}
       contentLabel="Example Modal"
     >
-       <h2>Novo Contato</h2>
+       <NewTitle>Novo Contato</NewTitle>
         <form onSubmit={handleSubmit}>
           <FormContainer>
-            <FormField
-              type="number"
-              name="id"
-              placeholder="ID"
-              value={formData.id}
-              onChange={handleChange}
-            />
+            <p>Nome:</p>
             <FormField
               type="text"
               name="name"
@@ -103,6 +129,7 @@ export const ContactAdd = () => {
               value={formData.name}
               onChange={handleChange}
             />
+            <p>Email:</p>
             <FormField
               type="email"
               name="email"
@@ -110,21 +137,29 @@ export const ContactAdd = () => {
               value={formData.email}
               onChange={handleChange}
             />
-            <FormField
-              type="text"
-              name="phone"
-              placeholder="Telefone"
-              value={formData.phone}
-              onChange={handleChange}
-            />
+            <p>Telefone:</p>
+            <PhoneInput
+            type="phone"
+            name="phone"
+            placeholder="(__) _____-____"
+            mask="(99) 99999-9999"
+            maskChar="_"
+            value={formData.phone}
+            onChange={handlePhoneChange}
+          />
+            <p>Data de Nascimento:</p>
             <DatePicker
               selected={selectedDate}
               onChange={handleDateChange}
               dateFormat="dd/MM/yyyy"
               placeholderText="Selecione a data"
+              customInput={customInput}
             />
-            <SubmitButton type="submit">Salvar</SubmitButton>
-            <button onClick={clearForm}>Cancelar</button>
+            <ButtonDiv>
+              <CancelButton onClick={clearForm}>Cancelar</CancelButton>
+              <SubmitButton type="submit">Salvar</SubmitButton>
+            </ButtonDiv>
+
           </FormContainer>
         </form>
       </Modal>

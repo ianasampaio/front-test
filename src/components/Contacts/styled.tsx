@@ -30,6 +30,7 @@ export const FlexContainer = styled.div`
 
 export const Contact = styled.div`
     padding: 30px;
+    font-size: 16px;
 `;
 
 export const Image = styled.div`

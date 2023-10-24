@@ -37,6 +37,12 @@ export default createGlobalStyle`
         background: ${colors.successColor};
     }
 
+    p {
+        font-size: 16px;
+        margin-bottom: 10px;
+        margin-left: 4px;
+    }
+
     .CustomLink{
         margin-right: 10px;
     }
