@@ -3,10 +3,10 @@ import { primaryColor, primaryDarkColor, secondaryColor } from "../../config/col
 
 export const Title = styled.h1`
     font-size: 32px;
-    font-weight: 700;
+    font-weight: 600;
     color: ${primaryDarkColor};
     text-align: center;
-    margin-bottom: 40px;
+    margin-bottom: 20px;
     margin-top: 30px;
 `;
 
@@ -15,8 +15,7 @@ export const ContactContainer = styled.div`
     border: 1px solid ${secondaryColor};
     border-radius: 10px;
     font-size: 16px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-
+    box-shadow: 0 0 10px rgba(0,0,0,0.05);
 `;
 
 export const FlexContainer = styled.div`

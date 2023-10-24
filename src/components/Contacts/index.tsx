@@ -5,6 +5,10 @@ import { Title, ContactContainer, Contact, Image, FlexContainer, DivInFlexContai
 import { FaEdit, FaTrash } from 'react-icons/fa'
 // import { toast } from 'react-toastify';
 import axios from '../../services/axios';
+import Modal from 'react-modal';
+import { ContactAdd } from '../Contact';
+
+Modal.setAppElement('#root');
 
 export const Contacts = () => {
   // toast.success('teste');
@@ -30,11 +34,19 @@ export const Contacts = () => {
     getContacts();
   }, []);
 
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+
+  const closeModal = () => {
+    setModalIsOpen(false);
+  };
+
   return (
     <>
     <Container>
       <div>
         <Title>Agenda de Contatos</Title>
+
+        <ContactAdd></ContactAdd>
 
         <ContactContainer>
           {contacts.map(contact => (
@@ -63,6 +75,16 @@ export const Contacts = () => {
             </FlexContainer>
           ))}
         </ContactContainer>
+
+        {/* Modal */}
+        <Modal
+          isOpen={modalIsOpen}
+          onRequestClose={closeModal}
+        >
+          Conteúdo do Modal
+          <button onClick={closeModal}>Fechar Modal</button>
+        </Modal>
+
       </div>
     </Container>
     </>
