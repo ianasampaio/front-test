@@ -2,9 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Contacts } from './components/Contacts';
-import { About } from './components/About';
 import { Posts } from './components/Posts';
-import { Redirect } from './components/Redirect';
 import { NotFound } from './components/NotFound';
 import { Post } from './components/Post';
 import GlobalStyles from './styles/GlobalStyles';
@@ -16,13 +14,10 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
     <GlobalStyles />
     < ToastContainer autoClose={3000}/>
       <Routes>
-        <Route path="/" element={<Contacts />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/posts" element={<Posts />}>
+        <Route path="/contacts" element={<Contacts />} />
+        <Route path="/contacts" element={<Posts />}>
           <Route path=":id" element={<Post />} />
         </Route>
-        <Route path="/posts" element={<Posts />} />
-        <Route path="/redirect" element={<Redirect />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>

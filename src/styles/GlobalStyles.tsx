@@ -30,12 +30,16 @@ export default createGlobalStyle`
 
     ul {
         list-style: none;
+        margin-bottom: 7px;
     }
 
     body .Toastify .Toastify__toast-container .Toastfy__toast--success {
         background: ${colors.successColor};
     }
 
+    .CustomLink{
+        margin-right: 10px;
+    }
 `;
 
 export const Container = styled.section`

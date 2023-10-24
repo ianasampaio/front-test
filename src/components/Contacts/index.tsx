@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Container } from '../../styles/GlobalStyles';
-import { Title, ContactContainer } from './styled';
+import { Link } from 'react-router-dom';
+import { Title, ContactContainer, Contact, Image, FlexContainer, DivInFlexContainer } from './styled';
+import { FaEdit, FaTrash } from 'react-icons/fa'
 // import { toast } from 'react-toastify';
 import axios from '../../services/axios';
 
@@ -10,7 +12,9 @@ export const Contacts = () => {
   interface Contact {
     id: number;
     name: string;
-    // Adicione outras propriedades aqui, se necessário
+    email: string;
+    phone: string;
+    birthDate: string;
   }
 
   const [contacts, setContacts] = useState<Contact[]>([]);
@@ -18,7 +22,7 @@ export const Contacts = () => {
   useEffect(() => {
     async function getContacts() {
       const response = await axios.get('/contacts');
-      const data = response.data as Contact[]; // Força o TypeScript a reconhecer o tipo
+      const data = response.data as Contact[];
       console.log(data);
       setContacts(data);
     }
@@ -30,13 +34,33 @@ export const Contacts = () => {
     <>
     <Container>
       <div>
-        <Title>Contacts</Title>
+        <Title>Agenda de Contatos</Title>
 
         <ContactContainer>
           {contacts.map(contact => (
-            <div key={(String(contact.id))}>
-              {contact.name}
-            </div>
+            <FlexContainer>
+              <Image>
+
+              </Image>
+              <Contact key={(String(contact.id))}>
+                <ul><strong>Nome: </strong>{contact.name}</ul>
+                <ul><strong>Email: </strong>{contact.email}</ul>
+                <ul><strong>Telefone: </strong>{formatPhoneNumber(contact.phone)}</ul>
+                <ul><strong>Data de Nascimento: </strong>{formatDate(contact.birthDate)}</ul>
+              </Contact>
+
+
+              <DivInFlexContainer>
+                <Link className="CustomLink" to={`/contacts/${contact.id}`}>
+                  <FaEdit size={16} color="#000" />
+                </Link>
+
+                <Link to={`/contacts/${contact.id}`}>
+                  <FaTrash size={16} color="#f5365c" />
+                </Link>
+              </DivInFlexContainer>
+
+            </FlexContainer>
           ))}
         </ContactContainer>
       </div>
@@ -44,3 +68,16 @@ export const Contacts = () => {
     </>
   );
 };
+
+function formatDate(dateString: string) {
+  const dateParts = dateString.split("-");
+  return dateParts.join("/");
+}
+
+function formatPhoneNumber(phoneNumber: string) {
+  if (phoneNumber.length !== 11) {
+    return 'Número de telefone inválido';
+  }
+  const formattedNumber = `(${phoneNumber.substring(0, 2)}) 9 ${phoneNumber.substring(2, 7)} ${phoneNumber.substring(7)}`;
+  return formattedNumber;
+}
