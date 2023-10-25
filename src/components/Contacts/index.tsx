@@ -1,14 +1,14 @@
 import { useEffect, useState } from 'react';
 import { Container } from '../../styles/GlobalStyles';
 import { Link } from 'react-router-dom';
-import { Title, ContactContainer, Contact, Image, FlexContainer, DivInFlexContainer, SubmitButton, CancelButton } from './styled';
+import { Title, ContactContainer, Contact, Image, FlexContainer, DivInFlexContainer, SubmitButton, CancelButton, Subtitle } from './styled';
 import { FaEdit, FaTrash } from 'react-icons/fa'
-// import { toast } from 'react-toastify';
 import axios from '../../services/axios';
 import Modal from 'react-modal';
 import { ContactAdd } from '../Contact';
 import { ButtonDiv } from '../Contact/styled';
 import { useNavigate } from 'react-router-dom';
+// import { toast } from 'react-toastify';
 
 const deleteStyle = {
   content: {
@@ -43,6 +43,7 @@ export const Contacts = () => {
 
   const [contacts, setContacts] = useState<Contact[]>([]);
   const [contactToDelete, setContactToDelete] = useState<Contact | null>(null);
+  const [totalContacts, setTotalContacts] = useState(0);
 
   useEffect(() => {
     async function getContacts() {
@@ -50,8 +51,8 @@ export const Contacts = () => {
       const data = response.data as Contact[];
       const sortedContacts = data.sort((a, b) => a.name.localeCompare(b.name));
       setContacts(sortedContacts);
+      setTotalContacts(sortedContacts.length);
     }
-
     getContacts();
   }, []);
 
@@ -78,6 +79,7 @@ export const Contacts = () => {
 
   const closeModal = () => {
     setModalIsOpen(false);
+    navigate('/contacts');
   };
 
   return (
@@ -86,7 +88,10 @@ export const Contacts = () => {
       <div>
         <Title>Agenda de Contatos</Title>
 
-        <ContactAdd></ContactAdd>
+        <Subtitle>
+          <h3>Contatos cadastrados: {totalContacts}</h3>
+          <ContactAdd></ContactAdd>
+        </Subtitle>
 
         <ContactContainer>
           {contacts.map(contact => (

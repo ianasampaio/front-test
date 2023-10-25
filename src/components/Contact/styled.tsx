@@ -14,7 +14,7 @@ export const Button = styled.button`
   padding: 10px 20px;
   border: none;
   font-weight: bold;
-  margin-left: 640px;
+  /* margin-left: 640px; */
   margin-bottom: 30px;
   border-radius: var(--btn-border-radius, 9999999px);
 `;
@@ -61,4 +61,11 @@ export const CancelButton = styled.button`
   border: none;
   cursor: pointer;
   border-radius: var(--btn-border-radius, 9999999px);
+`;
+
+export const ErrorMessage = styled.p`
+  color: red;
+  font-size: 13px;
+  margin-top: -12px;
+  margin-bottom: 15px;
 `;

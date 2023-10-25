@@ -1,12 +1,14 @@
 import { useState } from 'react';
 import Modal from 'react-modal';
 import { FaPlus } from 'react-icons/fa'
-import { Button, ButtonDiv, CancelButton, FormContainer, FormField, NewTitle, SubmitButton } from './styled';
+import { Button, ButtonDiv, CancelButton, ErrorMessage, FormContainer, FormField, NewTitle, SubmitButton } from './styled';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import InputMask from 'react-input-mask';
 import styled from 'styled-components';
 import { secondaryColor } from '../../config/colors';
+import validator from "validator";
+
 
 const customStyles = {
   content: {
@@ -38,6 +40,8 @@ const customInput = (
     }}
   />
 );
+
+
 const PhoneInput = styled(InputMask)`
   display: block;
   margin-bottom: 20px;
@@ -60,8 +64,14 @@ export const ContactAdd = () => {
     });
 
     const [selectedDate, setSelectedDate] = useState(new Date());
-    const [isFormValid, setIsFormValid] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
+    const [emailValidationMessage, setEmailValidationMessage] = useState('');
+
+
+    const [isNameFilled, setIsNameFilled] = useState(false);
+    const [isEmailFilled, setIsEmailFilled] = useState(false);
+    const [isPhoneFilled, setIsPhoneFilled] = useState(false);
+    const [isBirthDateFilled, setIsBirthDateFilled] = useState(false);
 
 
 
@@ -76,17 +86,30 @@ export const ContactAdd = () => {
       setIsOpen(false);
     }
 
+    const validateEmail = (email: string) => {
+      if (validator.isEmail(email)) {
+        setEmailValidationMessage("");
+      } else {
+        // FormField.style = {{ border: '1px solid red', backgroundColor: 'lightpink' }}
+        setEmailValidationMessage("Please, enter a valid Email!");
+      }
+    };
+
+
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       const { name, value } = e.target;
       setFormData({ ...formData, [name]: value });
 
-      // Verifique se todos os campos obrigatórios estão preenchidos
-      const isNameValid = formData.name !== '';
-      const isEmailValid = formData.email !== '';
-      const isPhoneValid = formData.phone !== '';
-      const isDateValid = formData.birthDate !== '';
+      if (name === 'name') {
+        setIsNameFilled(!!value);
+      } else if (name === 'email') {
+        setIsEmailFilled(!!value);
+      } else if (name === 'phone') {
+        setIsPhoneFilled(!!value);
+      } else if (name === 'birthDate') {
+        setIsBirthDateFilled(!!value);
+      }
 
-      setIsFormValid(isNameValid && isEmailValid && isPhoneValid && isDateValid);
     };
 
     const handleDateChange = (date: Date) => {
@@ -104,12 +127,14 @@ export const ContactAdd = () => {
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
-      if (isFormValid) {
+      // Verifique se todos os campos obrigatórios estão preenchidos
+      if (isNameFilled && isEmailFilled && isPhoneFilled && isBirthDateFilled) {
         // Faça algo com os dados do formulário, por exemplo, envie para um servidor
         setErrorMessage(''); // Limpa a mensagem de erro
         closeModal(); // Fecha o modal após envio bem-sucedido
       } else {
         setErrorMessage('Por favor, preencha todos os campos obrigatórios.');
+        closeModal();
       }
     };
 
@@ -121,7 +146,7 @@ export const ContactAdd = () => {
         birthDate: '',
       });
       closeModal();
-      setErrorMessage('');// Feche o modal após limpar o formulário
+      setErrorMessage('');
     };
 
   return (
@@ -142,6 +167,7 @@ export const ContactAdd = () => {
           <FormContainer>
             <p>Nome:</p>
             <FormField
+              required
               type="text"
               name="name"
               placeholder="Nome"
@@ -154,8 +180,15 @@ export const ContactAdd = () => {
               name="email"
               placeholder="Email"
               value={formData.email}
-              onChange={handleChange}
+              onChange={(e) => {
+                handleChange(e);
+                validateEmail(e.target.value);
+              }}
+              style={{
+                border: formData.email && !validator.isEmail(formData.email) ? '1px solid red' : '1px solid #e6e6e8',
+              }}
             />
+            {emailValidationMessage && <ErrorMessage>{emailValidationMessage}</ErrorMessage>}
             <p>Telefone:</p>
             <PhoneInput
             type="phone"
@@ -173,10 +206,11 @@ export const ContactAdd = () => {
               dateFormat="dd/MM/yyyy"
               placeholderText="Selecione a data"
               customInput={customInput}
+              value={formData.birthDate}
             />
             <ButtonDiv>
               <CancelButton onClick={clearForm}>Cancelar</CancelButton>
-              <SubmitButton type="submit" disabled={!isFormValid}>Salvar</SubmitButton>
+              <SubmitButton type="submit">Salvar</SubmitButton>
             </ButtonDiv>
 
           </FormContainer>
