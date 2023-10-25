@@ -8,6 +8,7 @@ import axios from '../../services/axios';
 import Modal from 'react-modal';
 import { ContactAdd } from '../Contact';
 import { ButtonDiv } from '../Contact/styled';
+import { useNavigate } from 'react-router-dom';
 
 const deleteStyle = {
   content: {
@@ -29,6 +30,8 @@ Modal.setAppElement('#root');
 
 export const Contacts = () => {
   // toast.success('teste');
+
+  const navigate = useNavigate();
 
   interface Contact {
     id: number;
@@ -57,11 +60,19 @@ export const Contacts = () => {
     setModalIsOpen(true);
   };
 
-  const confirmDelete = () => {
-    // Realize a lógica de exclusão aqui, por exemplo, fazendo uma solicitação para o servidor
-    // Depois de excluir o contato, feche o modal de confirmação
-    setModalIsOpen(false);
+  const handleconfirmDelete = (contactId: number)=> {
+    axios.delete(`/contacts/${contactId}`)
+      .then((response) => {
+        console.log("Contato excluído com sucesso", response);
+        setContacts(prevContacts => prevContacts.filter(contact => contact.id !== contactId));
+        setModalIsOpen(false);
+        navigate('/contacts');
+      })
+      .catch((error) => {
+        console.error("Erro ao excluir o contato", error);
+      });
   };
+
 
   const [modalIsOpen, setModalIsOpen] = useState(false);
 
@@ -115,7 +126,7 @@ export const Contacts = () => {
           <p><strong>{contactToDelete && contactToDelete.name}</strong></p>
           <ButtonDiv>
             <CancelButton onClick={closeModal}>Cancelar</CancelButton>
-            <SubmitButton onClick={confirmDelete}>Confirmar</SubmitButton>
+            <SubmitButton onClick={() => contactToDelete?.id && handleconfirmDelete(contactToDelete.id)}>Confirmar</SubmitButton>
           </ButtonDiv>
         </Modal>
 
