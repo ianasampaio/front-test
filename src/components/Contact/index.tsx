@@ -2,12 +2,16 @@ import { useState } from 'react';
 import Modal from 'react-modal';
 import { FaPlus } from 'react-icons/fa'
 import { Button, ButtonDiv, CancelButton, ErrorMessage, FormContainer, FormField, NewTitle, SubmitButton } from './styled';
-import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import InputMask from 'react-input-mask';
 import styled from 'styled-components';
 import { secondaryColor } from '../../config/colors';
 import validator from "validator";
+import { DatePicker } from "antd";
+import dayjs from "dayjs";
+import { Control, Controller, useForm } from "react-hook-form";
+
+
 
 
 const customStyles = {
@@ -24,22 +28,22 @@ const customStyles = {
   },
 };
 
-const customInput = (
-  <input
-    type="text"
-    className="custom-datepicker-input"
-    style={{
-      display: 'block',
-      marginBottom: '20px',
-      width: '100%',
-      padding: '10px',
-      fontSize: '16px',
-      border: '1px solid #e6e6e8',
-      borderRadius: '10px',
-      cursor: 'pointer',
-    }}
-  />
-);
+// const customInput = (
+//   <input
+//     type="text"
+//     className="custom-datepicker-input"
+//     style={{
+//       display: 'block',
+//       marginBottom: '20px',
+//       width: '100%',
+//       padding: '10px',
+//       fontSize: '16px',
+//       border: '1px solid #e6e6e8',
+//       borderRadius: '10px',
+//       cursor: 'pointer',
+//     }}
+//   />
+// );
 
 
 const PhoneInput = styled(InputMask)`
@@ -53,8 +57,51 @@ const PhoneInput = styled(InputMask)`
 `;
 
 Modal.setAppElement('#root');
+interface RHFDatePickerFieldProps {
+  control: Control<any>;
+  name: string;
+  placeholder?: string;
+}
+
+const RHFDatePickerField = (props: RHFDatePickerFieldProps) => {
+  return (
+    <Controller
+      control={props.control}
+      name={props.name}
+      rules={{
+        required: "This field is required"
+      }}
+      render={({ field, fieldState }) => {
+        return (
+          <>
+            <DatePicker
+              placeholder={props.placeholder}
+              status={fieldState.error ? "error" : undefined}
+              ref={field.ref}
+              name={field.name}
+              onBlur={field.onBlur}
+              value={field.value ? dayjs(field.value) : null}
+              format="DD-MM-YYYY"
+              onChange={(date) => {
+                field.onChange(date ? date.valueOf() : null);
+              }}
+            />
+            <br />
+            {fieldState.error ? (
+              <span style={{ color: "red" }}>{fieldState.error?.message}</span>
+            ) : null}
+          </>
+        );
+      }}
+    />
+  );
+};
 
 export const ContactAdd = () => {
+    const { control } = useForm<{
+      startDate: string;
+      endDate: string;
+    }>();
     const [modalIsOpen, setIsOpen] = useState(false);
     const [formData, setFormData] = useState({
       name: '',
@@ -63,7 +110,6 @@ export const ContactAdd = () => {
       birthDate: '',
     });
 
-    const [selectedDate, setSelectedDate] = useState(new Date());
     const [errorMessage, setErrorMessage] = useState('');
     const [emailValidationMessage, setEmailValidationMessage] = useState('');
 
@@ -112,13 +158,6 @@ export const ContactAdd = () => {
 
     };
 
-    const handleDateChange = (date: Date) => {
-      // Converte a data para o formato desejado (por exemplo, string)
-      // e atualiza o estado do formulário
-      const formattedDate = date.toLocaleDateString('pt-BR'); // Altere o local se necessário
-      setFormData({ ...formData, birthDate: formattedDate });
-      setSelectedDate(date); // Atualiza a data no date picker
-    };
 
     const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       const value = e.target.value;
@@ -200,14 +239,12 @@ export const ContactAdd = () => {
             onChange={handlePhoneChange}
           />
             <p>Data de Nascimento:</p>
-            <DatePicker
-              selected={selectedDate}
-              onChange={handleDateChange}
-              dateFormat="dd/MM/yyyy"
-              placeholderText="Selecione a data"
-              customInput={customInput}
-              value={formData.birthDate}
+            <RHFDatePickerField
+            placeholder="Selecione a data"
+            control={control}
+            name="birthDate"
             />
+
             <ButtonDiv>
               <CancelButton onClick={clearForm}>Cancelar</CancelButton>
               <SubmitButton type="submit">Salvar</SubmitButton>
