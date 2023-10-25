@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { primaryColor, primaryDarkColor, secondaryColor } from "../../config/colors";
+import { primaryColor, primaryDarkColor, secondaryColor, warninColor } from "../../config/colors";
 
 export const Title = styled.h1`
     font-size: 32px;
@@ -47,4 +47,26 @@ export const DivInFlexContainer = styled.div`
     margin-left: 210px;
     align-self: flex-start;
     justify-self: flex-start;
+`;
+
+export const SubmitButton = styled.button`
+  margin-top: 30px;
+  padding: 13px 20px;
+  font-size: 16px;
+  background-color: #6af7c8;
+  color: ${primaryDarkColor};
+  border: none;
+  cursor: pointer;
+  border-radius: var(--btn-border-radius, 9999999px);
+`;
+
+export const CancelButton = styled.button`
+  margin-top: 30px;
+  padding: 13px 20px;
+  font-size: 16px;
+  background-color: ${warninColor};
+  color: ${primaryDarkColor};
+  border: none;
+  cursor: pointer;
+  border-radius: var(--btn-border-radius, 9999999px);
 `;

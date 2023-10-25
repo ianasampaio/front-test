@@ -1,12 +1,29 @@
 import { useEffect, useState } from 'react';
 import { Container } from '../../styles/GlobalStyles';
 import { Link } from 'react-router-dom';
-import { Title, ContactContainer, Contact, Image, FlexContainer, DivInFlexContainer } from './styled';
+import { Title, ContactContainer, Contact, Image, FlexContainer, DivInFlexContainer, SubmitButton, CancelButton } from './styled';
 import { FaEdit, FaTrash } from 'react-icons/fa'
 // import { toast } from 'react-toastify';
 import axios from '../../services/axios';
 import Modal from 'react-modal';
 import { ContactAdd } from '../Contact';
+import { ButtonDiv } from '../Contact/styled';
+
+const deleteStyle = {
+  content: {
+    width:'400px',
+    top: '50%',
+    left: '50%',
+    right: 'auto',
+    bottom: 'auto',
+    marginRight: '-50%',
+    transform: 'translate(-50%, -50%)',
+    backgroundColor: '#fff',
+    border: '1px solid #cfcfd0',
+    borderRadius: '10px',
+    padding: '30px',
+  },
+};
 
 Modal.setAppElement('#root');
 
@@ -22,6 +39,7 @@ export const Contacts = () => {
   }
 
   const [contacts, setContacts] = useState<Contact[]>([]);
+  const [contactToDelete, setContactToDelete] = useState<Contact | null>(null);
 
   useEffect(() => {
     async function getContacts() {
@@ -33,6 +51,17 @@ export const Contacts = () => {
 
     getContacts();
   }, []);
+
+  const handleDeleteAsk = (contact: Contact) => {
+    setContactToDelete(contact);
+    setModalIsOpen(true);
+  };
+
+  const confirmDelete = () => {
+    // Realize a lógica de exclusão aqui, por exemplo, fazendo uma solicitação para o servidor
+    // Depois de excluir o contato, feche o modal de confirmação
+    setModalIsOpen(false);
+  };
 
   const [modalIsOpen, setModalIsOpen] = useState(false);
 
@@ -67,7 +96,7 @@ export const Contacts = () => {
                   <FaEdit size={16} color="#000" />
                 </Link>
 
-                <Link to={`/contacts/${contact.id}`}>
+                <Link onClick={() => handleDeleteAsk(contact)}to={`/contacts/${contact.id}`}>
                   <FaTrash size={16} color="#f5365c" />
                 </Link>
               </DivInFlexContainer>
@@ -80,9 +109,14 @@ export const Contacts = () => {
         <Modal
           isOpen={modalIsOpen}
           onRequestClose={closeModal}
+          style={deleteStyle}
         >
-          Conteúdo do Modal
-          <button onClick={closeModal}>Fechar Modal</button>
+          <p>Tem certeza de que deseja excluir o contato:</p>
+          <p><strong>{contactToDelete && contactToDelete.name}</strong></p>
+          <ButtonDiv>
+            <CancelButton onClick={closeModal}>Cancelar</CancelButton>
+            <SubmitButton onClick={confirmDelete}>Confirmar</SubmitButton>
+          </ButtonDiv>
         </Modal>
 
       </div>

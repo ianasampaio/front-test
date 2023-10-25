@@ -60,6 +60,9 @@ export const ContactAdd = () => {
     });
 
     const [selectedDate, setSelectedDate] = useState(new Date());
+    const [isFormValid, setIsFormValid] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('');
+
 
 
     function openModal() {
@@ -76,6 +79,14 @@ export const ContactAdd = () => {
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       const { name, value } = e.target;
       setFormData({ ...formData, [name]: value });
+
+      // Verifique se todos os campos obrigatórios estão preenchidos
+      const isNameValid = formData.name !== '';
+      const isEmailValid = formData.email !== '';
+      const isPhoneValid = formData.phone !== '';
+      const isDateValid = formData.birthDate !== '';
+
+      setIsFormValid(isNameValid && isEmailValid && isPhoneValid && isDateValid);
     };
 
     const handleDateChange = (date: Date) => {
@@ -93,7 +104,13 @@ export const ContactAdd = () => {
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
-      // Faça algo com os dados do formulário, por exemplo, envie para um servidor
+      if (isFormValid) {
+        // Faça algo com os dados do formulário, por exemplo, envie para um servidor
+        setErrorMessage(''); // Limpa a mensagem de erro
+        closeModal(); // Fecha o modal após envio bem-sucedido
+      } else {
+        setErrorMessage('Por favor, preencha todos os campos obrigatórios.');
+      }
     };
 
     const clearForm = () => {
@@ -103,7 +120,8 @@ export const ContactAdd = () => {
         phone: '',
         birthDate: '',
       });
-      closeModal(); // Feche o modal após limpar o formulário
+      closeModal();
+      setErrorMessage('');// Feche o modal após limpar o formulário
     };
 
   return (
@@ -119,6 +137,7 @@ export const ContactAdd = () => {
       contentLabel="Example Modal"
     >
        <NewTitle>Novo Contato</NewTitle>
+       {errorMessage && <div className="error-message">{errorMessage}</div>}
         <form onSubmit={handleSubmit}>
           <FormContainer>
             <p>Nome:</p>
@@ -157,7 +176,7 @@ export const ContactAdd = () => {
             />
             <ButtonDiv>
               <CancelButton onClick={clearForm}>Cancelar</CancelButton>
-              <SubmitButton type="submit">Salvar</SubmitButton>
+              <SubmitButton type="submit" disabled={!isFormValid}>Salvar</SubmitButton>
             </ButtonDiv>
 
           </FormContainer>
